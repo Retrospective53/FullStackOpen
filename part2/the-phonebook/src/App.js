@@ -1,23 +1,26 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Filter from './Components/Filter';
 import PersonForm from './Components/PersonForm';
 import Person from './Components/Person'
+import axios from 'axios';
 
 
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-1234567', id: 1 },
-    { name: 'Remilia', number: '050-1234567', id: 2 },
-    { name: 'Sakuya', number: '040-1124567', id: 3 },
-    { name: 'Patchouli', number: '060-1234567', id: 4 },
-    { name: 'Reimu', number: '020-114567', id: 5 },
-
-
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')  
   const [searchName, setSearchName] = useState('')
+
+  useEffect(() => {
+    console.log('effect');
+    axios.get('http://localhost:3001/persons')
+    .then(response => {
+      console.log('promise fulfilled');
+      setPersons(response.data)
+    })
+  }, [])
+  console.log( 'render ' + persons.length + ' person');
 
   const filteredPerson = persons.filter(person =>
     person.name.toLowerCase().includes(searchName.toLocaleLowerCase()) )
@@ -27,7 +30,8 @@ const App = () => {
     const duplicate = persons.some((person) => person.name === newName)
     const personsObject = {
       name: newName,
-      number: newNumber
+      number: newNumber,
+      id: persons.length + 1
     }
     if (!duplicate) {
       setPersons(persons.concat(personsObject));
