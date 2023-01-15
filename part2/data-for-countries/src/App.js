@@ -8,6 +8,7 @@ const App = () => {
   const [searchCountry, setSearchCountry] = useState('');
   const [inputValue, setInputValue] = useState('');
   const [weather, setWeather] = useState([]);
+  const [timer, setTimer] = useState(null);
 
   useEffect(() => {
     axios.get('https://restcountries.com/v3.1/all')
@@ -20,22 +21,25 @@ const App = () => {
     country.name.common.toLowerCase().includes(searchCountry.toLowerCase()))
 
   useEffect(() => {
-    if (filteredCountries.length === 1) {
+      if (filteredCountries.length === 1) {
 
-      console.log('effect');
-      axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${filteredCountries[0].capital[0]}&appid=${api_key}`)
-      .then(response => {
-        setWeather(response.data)
-      })
-    }
-  }, [filteredCountries])
+        console.log('effect');
+        axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${filteredCountries[0].capital[0]}&appid=${api_key}`)
+        .then(response => {
+          setWeather(response.data)
+        })
+      }
+  }, [filteredCountries.length])
 
 
  
 
   const handleNameChange = (e) => {
-    setSearchCountry(e.target.value);
     setInputValue(e.target.value);
+    clearTimeout(timer);
+    const newTimer = setTimeout(() => setSearchCountry(e.target.value), 1000) ;
+
+    setTimer(newTimer)
   }
   
   return(
@@ -58,7 +62,11 @@ const App = () => {
           </div>
           <div>
             <h2>Weather in {filteredCountries[0].capital[0]}</h2>
-
+            <p>Temperature: {weather.main.temp}</p>
+            <p>Humidity: {weather.main.humidity}</p>
+            <p>Wind: {weather.wind.speed} m/s</p>
+            <img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="weather icon" />
+            <p>Weather: {weather.weather[0].description}</p>
           </div>
         </>
         :filteredCountries.length < 9 ? filteredCountries.map(country =>
