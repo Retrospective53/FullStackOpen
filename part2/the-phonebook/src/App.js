@@ -23,23 +23,57 @@ const App = () => {
   console.log( 'render ' + persons.length + ' person');
 
   const filteredPerson = persons.filter(person =>
-    person.name.toLowerCase().includes(searchName.toLocaleLowerCase()) )
+    person.name.toLowerCase().includes(searchName.toLowerCase()) )
+
+  const deletePerson = (person) => {
+    if (window.confirm(`Delete ${person.name}?`) === true) {
+        axios
+        .delete(`http://localhost:3001/persons/${person.id}`)
+        .then(response => {
+            alert(`${person.name} deleted`)
+            setPersons(persons.filter(p => p.id !== person.id))
+        })
+        .catch(error => {
+            console.log('failed lololol')
+        })
+    } else {
+        alert('cancel delete')
+    }
+}
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const duplicate = persons.some((person) => person.name === newName)
+    const findPerson = persons.find(person => person.name === newName)
     const personsObject = {
       name: newName,
       number: newNumber,
       id: persons.length + 1
     }
+    const updateObject = {
+      ...findPerson,
+      number: newNumber
+    }
     if (!duplicate) {
-      setPersons(persons.concat(personsObject));
-      setNewName('');
-      setNewNumber('');
+      axios
+      .post('http://localhost:3001/persons', personsObject)
+      .then(response => {
+        console.log(response)
+        setPersons(persons.concat(personsObject));
+        setNewName('');
+        setNewNumber('');
+
+      })
     }
     else {
-      alert(`${newName} is already added to phonebook`)
+      axios
+      .put(`http://localhost:3001/persons/${findPerson.id}`, updateObject)
+      .then(response => {
+        console.log(persons);
+        console.log(response.data);
+        console.log(persons.map(person => person.id !== findPerson.id ? person : response.data));
+        setPersons(persons.map(person => person.id !== findPerson.id ? person : response.data))
+      })
     }
   }
 
@@ -51,8 +85,6 @@ const App = () => {
 
   const handleNumberChange = event => 
     setNewNumber(event.target.value);
-  
-
 
   return (
     <div>
@@ -62,7 +94,7 @@ const App = () => {
       <PersonForm handleSubmit={handleSubmit} handleNameChange={handleNameChange}
       handleNumberChange={handleNumberChange} newName={newName} newNumber={newNumber}/>
       <h2>Numbers</h2>
-      <Person filteredPerson={filteredPerson}/>
+      <Person filteredPerson={filteredPerson} deletePerson={deletePerson}/>
     </div>
   )
 }
