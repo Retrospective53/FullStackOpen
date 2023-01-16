@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react'
 import Filter from './Components/Filter';
 import PersonForm from './Components/PersonForm';
 import Person from './Components/Person'
-import axios from 'axios';
-
-
+import personService from './services/phone'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -14,7 +12,7 @@ const App = () => {
 
   useEffect(() => {
     console.log('effect');
-    axios.get('http://localhost:3001/persons')
+    personService.getAll()
     .then(response => {
       console.log('promise fulfilled');
       setPersons(response.data)
@@ -27,8 +25,7 @@ const App = () => {
 
   const deletePerson = (person) => {
     if (window.confirm(`Delete ${person.name}?`) === true) {
-        axios
-        .delete(`http://localhost:3001/persons/${person.id}`)
+        personService.deletePerson(person.id)
         .then(response => {
             alert(`${person.name} deleted`)
             setPersons(persons.filter(p => p.id !== person.id))
@@ -55,8 +52,7 @@ const App = () => {
       number: newNumber
     }
     if (!duplicate) {
-      axios
-      .post('http://localhost:3001/persons', personsObject)
+      personService.createPerson(personsObject)
       .then(response => {
         console.log(response)
         setPersons(persons.concat(personsObject));
@@ -66,8 +62,7 @@ const App = () => {
       })
     }
     else {
-      axios
-      .put(`http://localhost:3001/persons/${findPerson.id}`, updateObject)
+      personService.updatePerson(findPerson.id, updateObject)
       .then(response => {
         console.log(persons);
         console.log(response.data);
