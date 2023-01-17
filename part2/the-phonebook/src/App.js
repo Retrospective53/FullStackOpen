@@ -4,21 +4,46 @@ import PersonForm from './Components/PersonForm';
 import Person from './Components/Person'
 import personService from './services/phone'
 
+const Notification = ({message}) => {
+  if (message == null) {
+    return null
+  }
+
+  const notificationStyle = {
+    color: 'red',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+
+  }
+
+  return(
+    <div className='error' style={notificationStyle}>
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')  
   const [searchName, setSearchName] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+
+  const errorNull = () => setTimeout(() => {
+    setErrorMessage(null)
+  }, 3000)
 
   useEffect(() => {
-    console.log('effect');
     personService.getAll()
     .then(response => {
-      console.log('promise fulfilled');
       setPersons(response.data)
     })
   }, [])
-  console.log( 'render ' + persons.length + ' person');
 
   const filteredPerson = persons.filter(person =>
     person.name.toLowerCase().includes(searchName.toLowerCase()) )
@@ -29,9 +54,12 @@ const App = () => {
         .then(response => {
             alert(`${person.name} deleted`)
             setPersons(persons.filter(p => p.id !== person.id))
+            setErrorMessage(`${person.name}'s phonebook deleted`)
+            errorNull()
         })
         .catch(error => {
-            console.log('failed lololol')
+          setErrorMessage(`${person.name}'s phonebook is already deleted`)
+          errorNull()
         })
     } else {
         alert('cancel delete')
@@ -45,7 +73,6 @@ const App = () => {
     const personsObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1
     }
     const updateObject = {
       ...findPerson,
@@ -54,20 +81,25 @@ const App = () => {
     if (!duplicate) {
       personService.createPerson(personsObject)
       .then(response => {
-        console.log(response)
         setPersons(persons.concat(personsObject));
+        setErrorMessage(`Added ${newName}`)
+        errorNull()
         setNewName('');
         setNewNumber('');
-
       })
     }
     else {
       personService.updatePerson(findPerson.id, updateObject)
       .then(response => {
-        console.log(persons);
-        console.log(response.data);
-        console.log(persons.map(person => person.id !== findPerson.id ? person : response.data));
-        setPersons(persons.map(person => person.id !== findPerson.id ? person : response.data))
+        setPersons(persons.map(person => person.id !== findPerson.id ? person : response.data));
+        setErrorMessage(`Updated ${newName}`)
+        errorNull()
+        setNewName('');
+        setNewNumber('');
+      })
+      .catch(error => {
+        setErrorMessage(`Information of ${newName} has already been removed`)
+        errorNull()
       })
     }
   }
@@ -81,8 +113,11 @@ const App = () => {
   const handleNumberChange = event => 
     setNewNumber(event.target.value);
 
+  
+
   return (
     <div>
+      <Notification message={errorMessage} />
       <h2>Phonebook</h2>
       <Filter type="text" onChange={handleSearchChange} />
       <h2>add a new</h2>
