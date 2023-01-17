@@ -60,6 +60,7 @@ const App = () => {
             </ul>
             <p style={{ fontSize: '200px', margin: '0px' }}>{filteredCountries[0].flag}</p>
           </div>
+          {weather.main &&
           <div>
             <h2>Weather in {filteredCountries[0].capital[0]}</h2>
             <p>Temperature: {weather.main.temp}</p>
@@ -68,6 +69,7 @@ const App = () => {
             <img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="weather icon" />
             <p>Weather: {weather.weather[0].description}</p>
           </div>
+          }
         </>
         :filteredCountries.length < 9 ? filteredCountries.map(country =>
            <p key={country.name.common}>{country.name.common} <button onClick={() => {setSearchCountry(country.name.common); setInputValue(country.name.common)}}>show</button></p>) 
