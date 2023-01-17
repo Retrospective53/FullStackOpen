@@ -10,19 +10,18 @@ const Notification = ({message}) => {
   }
 
   const notificationStyle = {
-    color: 'red',
+    color: message[0] === 0 ? 'green' : 'red',
     background: 'lightgrey',
     fontSize: 20,
     borderStyle: 'solid',
     borderRadius: 5,
     padding: 10,
     marginBottom: 10
-
   }
 
   return(
     <div className='error' style={notificationStyle}>
-      {message}
+      {message[1]}
     </div>
   )
 }
@@ -54,11 +53,11 @@ const App = () => {
         .then(response => {
             alert(`${person.name} deleted`)
             setPersons(persons.filter(p => p.id !== person.id))
-            setErrorMessage(`${person.name}'s phonebook deleted`)
+            setErrorMessage([0 ,`${person.name}'s phonebook deleted`])
             errorNull()
         })
         .catch(error => {
-          setErrorMessage(`${person.name}'s phonebook is already deleted`)
+          setErrorMessage([1, `${person.name}'s phonebook is already deleted`])
           errorNull()
         })
     } else {
@@ -73,6 +72,7 @@ const App = () => {
     const personsObject = {
       name: newName,
       number: newNumber,
+      id: persons.length + 1
     }
     const updateObject = {
       ...findPerson,
@@ -82,7 +82,7 @@ const App = () => {
       personService.createPerson(personsObject)
       .then(response => {
         setPersons(persons.concat(personsObject));
-        setErrorMessage(`Added ${newName}`)
+        setErrorMessage([0, `Added ${newName}`])
         errorNull()
         setNewName('');
         setNewNumber('');
@@ -92,13 +92,13 @@ const App = () => {
       personService.updatePerson(findPerson.id, updateObject)
       .then(response => {
         setPersons(persons.map(person => person.id !== findPerson.id ? person : response.data));
-        setErrorMessage(`Updated ${newName}`)
+        setErrorMessage([0, `Updated ${newName}`])
         errorNull()
         setNewName('');
         setNewNumber('');
       })
       .catch(error => {
-        setErrorMessage(`Information of ${newName} has already been removed`)
+        setErrorMessage([1, `Information of ${newName} has already been removed`])
         errorNull()
       })
     }
