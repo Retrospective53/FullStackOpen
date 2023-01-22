@@ -1,0 +1,12 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "calmingszzsasd",
+    "author": "calmedsaaggg",
+    "url": "77 + 33 = 1000000",
+    "likes": 12233
+}
+
+###
+GET http://localhost:3003/api/blogs
