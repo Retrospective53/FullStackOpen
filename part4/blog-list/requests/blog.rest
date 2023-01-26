@@ -2,10 +2,10 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "ebbnflow",
+    "title": "ebbnflowuyea",
     "author": "calmedsaaggg",
     "url": "awawaaw",
-    "userId": "63d287a3aae1c84eab57bda1" 
+    "likes": 888787
 }
 
 ###
