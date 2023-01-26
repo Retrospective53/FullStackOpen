@@ -1,18 +1,11 @@
 GET http://localhost:3003/api/users
-Content-Type: application/json
-
-{
-    "username": "mikumiku",
-    "name": "mikuu",
-    "password": "loll"
-}
 
 ###
 POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
-    "username": "mikumiku",
+    "username": "ro",
     "name": "mikuu",
-    "password": "loll"
+    "password": "bbww"
 }

@@ -6,8 +6,13 @@ const unknownEndPoint = (request, response) => {
 
 const errorHandler = (error, request, response, next) => {
     logger.error(error.message)
+    logger.info(error.name)
 
-    response.status(400).send('Bad Request omegalul')
+    if (error.name === 'ValidationError') {
+        return response.status(400).send({ error: 'expected `username` to be unique'})
+    } else {
+        response.status(400).send({ error: error.message })
+    }
 
     next(error)
 }
