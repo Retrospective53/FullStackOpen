@@ -67,12 +67,11 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const duplicate = persons.some((person) => person.name === newName)
+    const duplicate = persons.some(person => person.name === newName)
     const findPerson = persons.find(person => person.name === newName)
     const personsObject = {
       name: newName,
-      number: newNumber,
-      id: persons.length + 1
+      number: newNumber
     }
     const updateObject = {
       ...findPerson,
@@ -81,24 +80,36 @@ const App = () => {
     if (!duplicate) {
       personService.createPerson(personsObject)
       .then(response => {
-        setPersons(persons.concat(personsObject));
+        const personObjectId = {
+          name: newName,
+          number: newNumber,
+          id: response.data.id
+        }
+        setPersons(persons.concat(personObjectId));
         setErrorMessage([0, `Added ${newName}`])
         errorNull()
         setNewName('');
         setNewNumber('');
+      })
+      .catch(error => {
+        console.log(error.response.data.error);
+        setErrorMessage([1, `${error.response.data.error}`])
+        errorNull()
       })
     }
     else {
       personService.updatePerson(findPerson.id, updateObject)
       .then(response => {
         setPersons(persons.map(person => person.id !== findPerson.id ? person : response.data));
+      })
+      .then(e => {
         setErrorMessage([0, `Updated ${newName}`])
         errorNull()
         setNewName('');
         setNewNumber('');
       })
       .catch(error => {
-        setErrorMessage([1, `Information of ${newName} has already been removed`])
+        setErrorMessage([1, `${error.response.data.error}`])
         errorNull()
       })
     }
