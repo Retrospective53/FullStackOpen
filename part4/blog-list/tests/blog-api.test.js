@@ -1,8 +1,12 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const Blog = require('../models/blog')
+const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+require('dotenv')
 const app = require('../app')
 const api = supertest(app)
-const Blog = require('../models/blog')
+const bcrypt = require('bcrypt')
 
 jest.setTimeout(100000)
 
@@ -45,12 +49,24 @@ const initialBlogs = [
     }  
 ]
 
+let token = null
+beforeAll( async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('sekeret', 10)
+    const user = new User({ username: "sweet", passwordHash})
+    await user.save()
+
+    const userForToken = { username: "sweet", id: user.id}
+    token = jwt.sign(userForToken, process.env.Secret)
+})
+
 beforeEach(async () => {
     await Blog.deleteMany({})
 
     let blogObject = initialBlogs
         .map(blog => new Blog(blog))
-    
+   
     const promiseArray = blogObject.map(blog => blog.save())
     await Promise.all(promiseArray)
 })
@@ -64,6 +80,7 @@ beforeEach(async () => {
 
 
 describe('validation return default', () => {
+
     test('return the correct length', async () => {
         await api
             .get('/api/blogs')
@@ -94,6 +111,7 @@ describe('validation return default', () => {
     
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -115,6 +133,7 @@ describe('validation return default', () => {
     
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -133,6 +152,7 @@ describe('validation return default', () => {
     
         const response = await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
             .send(invalidBlog)
             .expect(400)
             .expect('Content-Type', /text\/html/)
@@ -149,6 +169,7 @@ describe('deletion of a blog', () => {
 
         await api
             .delete(`/api/blogs/${blogToDelete.id}`)
+            .set('Authorization', `Bearer ${token}`)
             .expect(204)
         
         const blogsAtEnd = await api.get('/api/blogs')
@@ -158,7 +179,7 @@ describe('deletion of a blog', () => {
         const titles = blogsAtEnd.body.map(blog => blog.title)
         expect(titles).not.toContain(blogToDelete.title)
     })
-} )
+})
 
 describe('updating a blog', () => {
     test('updating the likes', async () => {

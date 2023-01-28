@@ -12,7 +12,7 @@ const helper = require('./helper')
 jest.setTimeout(100000)
 
 describe('when there is initally one user in db', () => {
-    beforeEach( async () => {
+    beforeAll( async () => {
         await User.deleteMany({})
 
         const passwordHash = await bcrypt.hash('sekeret', 10)
