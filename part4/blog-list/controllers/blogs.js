@@ -47,7 +47,7 @@ blogRouter.post('/', userExtractor, async (request, response) => {
 blogRouter.delete('/:id', userExtractor, async (request, response) => {
     const user = request.user
     const blog = await Blog.findById(request.params.id)
-
+    console.log(request.params.id)
     if (blog.user.toString() !== user.id.toString()) {
         return response.status(401).json({ error: 'invalid id'})
     }

@@ -7,6 +7,7 @@ require('dotenv')
 const app = require('../app')
 const api = supertest(app)
 const bcrypt = require('bcrypt')
+const { response } = require('../app')
 
 jest.setTimeout(100000)
 
@@ -159,6 +160,22 @@ describe('validation return default', () => {
         
         expect(response.text).toBe('Bad Request: title or url properties missing')
     })
+
+    test('adding a blog fails with the proper status code 401 unauthorized if a token is not provided', async () => {
+        const newBlog = {
+            title: 'nyannyan',
+            author: 'catneko',
+            likes: 7777
+        }
+
+        const response = await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(401)
+            .expect('Content-Type', /application\/json/)
+        
+        expect(response.body.error).toContain('token missing or invalid')
+    })
     
 })
 
@@ -166,7 +183,7 @@ describe('deletion of a blog', () => {
     test('succes with status code 204', async () => {
         const blogsAtStart = await api.get('/api/blogs')
         const blogToDelete = blogsAtStart.body[0]
-
+        console.log(blogToDelete.id)
         await api
             .delete(`/api/blogs/${blogToDelete.id}`)
             .set('Authorization', `Bearer ${token}`)
