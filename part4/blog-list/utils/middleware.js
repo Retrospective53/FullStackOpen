@@ -32,6 +32,7 @@ const tokenExtractor = (request, response, next) => {
 }
 
 const userExtractor = async (request, response, next) => {
+    console.log('being invoked')
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
     
 
