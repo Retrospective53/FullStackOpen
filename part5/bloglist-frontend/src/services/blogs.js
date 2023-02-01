@@ -16,7 +16,7 @@ const create = async newObject => {
     headers: { Authorization: token }
   }
 
-  const response = await axios.post(baseUrl, newObject, config)
+  await axios.post(baseUrl, newObject, config)
 }
 
 export default { getAll, create, setToken }
