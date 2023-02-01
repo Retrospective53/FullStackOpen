@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -13,6 +13,8 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [loginVisible, setLoginVisible] = useState(false)
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -85,6 +87,19 @@ const App = () => {
       </div>
     )}
 
+  const addBlogVisibility = () => {
+    blogFormRef.current.toggleVisibility()
+  }
+
+  const increaseLike = (blog) => {
+    const updatedBlog = blogs.map(b => b.id === blog.id ? { ...b, likes: b.likes + 1 } : b)
+    setBlogs(updatedBlog)
+  }
+
+  const handleDelete = (blog) => {
+    setBlogs(blogs.filter(b => b.id !== blog.id))
+  }
+
   return (
     <div>
       <h2>blogs</h2>
@@ -94,11 +109,11 @@ const App = () => {
         <>
           <p>{`${user.username} is logged in`}</p>
           <button type='button' onClick={handleLogOut}>Log out</button>
-          <Toggable buttonLabel='Create New Blog'>
-            <BlogForm setErrorMessage={setErrorMessage} errorNuller={errorNuller} blogs={blogs} setBlogs={setBlogs}/>
+          <Toggable buttonLabel='Create New Blog' ref={blogFormRef}>
+            <BlogForm setErrorMessage={setErrorMessage} errorNuller={errorNuller} blogs={blogs} setBlogs={setBlogs} addBlogVisibility={addBlogVisibility}/>
           </Toggable>
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+          {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+            <Blog key={blog.id} blog={blog} increaseLike={increaseLike} handleDelete={handleDelete}/>
           )}
         </>
       )}

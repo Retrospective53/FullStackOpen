@@ -5,7 +5,8 @@ const BlogForm = ({
   setErrorMessage,
   blogs,
   setBlogs,
-  errorNuller
+  errorNuller,
+  addBlogVisibility
 }) => {
   const [newBlogTitle, setNewBlogTitle] = useState('')
   const [newBlogAuthor, setNewBlogAuthor] = useState('')
@@ -20,6 +21,7 @@ const BlogForm = ({
         url: newBlogUrl
       })
       console.log(blog)
+      addBlogVisibility()
       setErrorMessage([0, `a new blog ${newBlogTitle} by ${newBlogAuthor} added`])
       errorNuller()
       setBlogs(blogs.concat(blog.data))
