@@ -35,10 +35,11 @@ const Blog = ({ blog, increaseLike, handleDelete }) => {
         {blog.title} {blog.author}
         <button onClick={() => setBlogVisible(!blogVisible)}>show</button>
       </div>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className='details'>
         <button onClick={() => setBlogVisible(!blogVisible)}>hide</button>
-        <p>Title: {blog.title} {blog.author}</p>
-        <p>Likes: {blog.likes} <button onClick={handleUpdateLike}>Like</button></p>
+        <p>Title: {blog.title}</p>
+        <p>Author: {blog.author}</p>
+        <p>Likes: {blog.likes} <button onClick={handleUpdateLike} className='like'>Like</button></p>
         <p>Url: {blog.url}</p>
         <p>User: {blog.user.username}</p>
         <button onClick={handleBlogDelete}>delete blog</button>
