@@ -29,8 +29,12 @@ const Blog = ({ blog, increaseLike, handleDelete }) => {
     }
   }
 
+  const loggedJSON = window.localStorage.getItem('loggedBlogUser')
+  const user = JSON.parse(loggedJSON)
+
+
   return(
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       <div style={hideWhenVisible}>
         {blog.title} {blog.author}
         <button onClick={() => setBlogVisible(!blogVisible)}>show</button>
@@ -42,7 +46,7 @@ const Blog = ({ blog, increaseLike, handleDelete }) => {
         <p>Likes: {blog.likes} <button onClick={handleUpdateLike} className='like'>Like</button></p>
         <p>Url: {blog.url}</p>
         <p>User: {blog.user.username}</p>
-        <button onClick={handleBlogDelete}>delete blog</button>
+        {user.username === blog.user.username && <button onClick={handleBlogDelete}>delete blog</button>}
       </div>
     </div>
   )

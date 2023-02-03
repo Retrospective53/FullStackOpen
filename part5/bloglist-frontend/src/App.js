@@ -76,11 +76,11 @@ const App = () => {
             <h2>Log in to application</h2>
             <div>
               username
-              <input type="text" name='username' value={username} onChange={({ target }) => setUsername(target.value)}/></div>
+              <input type="text" name='username' id='username' value={username} onChange={({ target }) => setUsername(target.value)}/></div>
             <div>
               password
-              <input type="text" name='password' value={password} onChange={({ target }) => setPassword(target.value)}/></div>
-            <button>submit</button>
+              <input type="text" name='password' id='password' value={password} onChange={({ target }) => setPassword(target.value)}/></div>
+            <button id='loginButton'>login</button>
           </form>
           <button onClick={() => setLoginVisible(false)}>cancel</button>
         </div>
