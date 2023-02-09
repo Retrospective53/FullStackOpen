@@ -2,8 +2,11 @@ import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import anecdoteService from './requests'
+import { useContext } from 'react'
+import NotificationContext from './NotificationContext'
 
 const App = () => {
+  const [notification, notificationDispatch] = useContext(NotificationContext)
   const result = useQuery('anecdotes', anecdoteService.getAll, { retry: false, refetchOnWindowFocus: false })
   const queryCLient = useQueryClient()
   const updateAnecdoteMutation = useMutation(anecdoteService.updateAnecdote, {
@@ -14,7 +17,6 @@ const App = () => {
         : anecdote).sort((a, b) => b.votes - a.votes))
     }
   }) 
-  console.log(result)
   if (!result.isSuccess) {
     return <div>anecdote service not available due to problems in server</div>
   }
@@ -22,8 +24,11 @@ const App = () => {
 
 
   const handleVote = (anecdote) => {
-    console.log('vote')
     updateAnecdoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1})
+    notificationDispatch({ type: 'SET', payload: `anecdote ${anecdote.content} voted`})
+    setTimeout(() => 
+    notificationDispatch({ type: 'NULL'})
+    , 5000)
   }
 
   // const anecdotes = [
@@ -52,7 +57,7 @@ const App = () => {
           </div>
         </div>
       )}
-      <button onClick={() => console.log(anecdotes)}>loggg</button>
+      <button onClick={() => console.log(result)}>loggg</button>
     </div>
   )
 }
