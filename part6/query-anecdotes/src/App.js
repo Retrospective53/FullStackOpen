@@ -28,7 +28,7 @@ const App = () => {
       <h3>Anecdote app</h3>
     
       <Notification />
-      <AnecdoteForm />
+      <AnecdoteForm anecdotes={anecdotes}/>
     
       {anecdotes.map(anecdote =>
         <div key={anecdote.id}>
@@ -41,6 +41,7 @@ const App = () => {
           </div>
         </div>
       )}
+      <button onClick={() => console.log(anecdotes)}>loggg</button>
     </div>
   )
 }
