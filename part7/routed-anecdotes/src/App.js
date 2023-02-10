@@ -84,10 +84,12 @@ const CreateNew = (props) => {
     navigate('/anecdotes')
   }
 
-  const reset = () => {
-    content.value = ''
-    author.value = ''
-    info.value = ''
+  const reset = (e) => {
+    e.preventDefault()
+    console.log(e)
+    content.onReset()
+    author.onReset()
+    info.onReset()
   }
   return (
     <div>
@@ -108,7 +110,7 @@ const CreateNew = (props) => {
         <button>create</button>
         <button onClick={reset}>reset</button>
       </form>
-      <button onClick={() => console.log(author)}>logg</button>
+      <button onClick={() => console.log(author.value)}>logg</button>
     </div>
   )
 
