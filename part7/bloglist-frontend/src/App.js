@@ -1,15 +1,14 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react'
+import NotificationContext from './hooks/notificationReducer'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import Toggable from './components/Toggable'
-import { useNotificationValue, useNotificationDispatch } from './hooks/notificationReducer'
 
 const App = () => {
-  const notificationValue = useNotificationValue()
-  const notificationDispatch = useNotificationDispatch()
+  const [notification, notificationDispatch] = useContext(NotificationContext)
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -105,7 +104,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={notificationValue}/>
+      <Notification message={notification}/>
       {user === null && loginForm()}
       {user !== null && (
         <>
@@ -119,7 +118,7 @@ const App = () => {
           )}
         </>
       )}
-      <button onClick={() => console.log(notificationValue)}>log</button>
+      <button onClick={() => console.log(notification)}>log</button>
     </div>
   )
 }
