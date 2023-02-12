@@ -6,6 +6,7 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import Toggable from './components/Toggable'
+import { useQuery } from 'react-query'
 
 const App = () => {
   const [notification, notificationDispatch] = useContext(NotificationContext)
@@ -14,13 +15,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [loginVisible, setLoginVisible] = useState(false)
-
   const blogFormRef = useRef()
-
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )}, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
@@ -30,6 +25,13 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const result = useQuery('blogs', blogService.getAll, { refetchOnWindowFocus: false })
+  useEffect(() => {
+    if (result.data) {
+      setBlogs(result.data)
+    }
+  }, [result.data])
 
   const errorNuller = () => {
     setTimeout(() => {
@@ -95,6 +97,7 @@ const App = () => {
   const increaseLike = (blog) => {
     const updatedBlog = blogs.map(b => b.id === blog.id ? { ...b, likes: b.likes + 1 } : b)
     setBlogs(updatedBlog)
+
   }
 
   const handleDelete = (blog) => {

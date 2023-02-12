@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 import { useNotificationDispatch } from '../hooks/notificationReducer'
+import { useMutation, useQueryClient } from 'react-query'
 
 const BlogForm = ({
   blogs,
-  setBlogs,
+  // setBlogs,
   errorNuller,
   addBlogVisibility
 }) => {
@@ -12,6 +13,13 @@ const BlogForm = ({
   const [newBlogTitle, setNewBlogTitle] = useState('')
   const [newBlogAuthor, setNewBlogAuthor] = useState('')
   const [newBlogUrl, setNewBlogUrl] = useState('')
+  const queryClient = useQueryClient()
+  const newBlogMutation = useMutation(blogService.create, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs')
+    }
+  })
+
 
   const handleCreate = async e => {
     e.preventDefault()
@@ -26,7 +34,8 @@ const BlogForm = ({
       errorNuller()
       console.log(blogs)
       console.log(blog.data)
-      setBlogs(blogs.concat(blog.data))
+      newBlogMutation.mutate(blog.data)
+      // setBlogs(blogs.concat(blog.data))
       setNewBlogTitle('')
       setNewBlogAuthor('')
       setNewBlogUrl('')
