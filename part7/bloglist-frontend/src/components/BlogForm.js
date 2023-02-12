@@ -4,7 +4,7 @@ import { useNotificationDispatch } from '../hooks/notificationReducer'
 import { useMutation, useQueryClient } from 'react-query'
 
 const BlogForm = ({
-  blogs,
+  // blogs,
   // setBlogs,
   errorNuller,
   addBlogVisibility
@@ -24,7 +24,7 @@ const BlogForm = ({
   const handleCreate = async e => {
     e.preventDefault()
     try {
-      const blog = await blogService.create({
+      newBlogMutation.mutate({
         title: newBlogTitle,
         author: newBlogAuthor,
         url: newBlogUrl
@@ -32,9 +32,6 @@ const BlogForm = ({
       addBlogVisibility()
       notificationDispatch({ type: 'SET', payload: [0, `a new blog ${newBlogTitle} by ${newBlogAuthor} added`] })
       errorNuller()
-      console.log(blogs)
-      console.log(blog.data)
-      newBlogMutation.mutate(blog.data)
       // setBlogs(blogs.concat(blog.data))
       setNewBlogTitle('')
       setNewBlogAuthor('')
