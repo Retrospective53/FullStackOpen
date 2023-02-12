@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
+import { useNotificationDispatch } from '../hooks/notificationReducer'
 
 const BlogForm = ({
-  setErrorMessage,
   blogs,
   setBlogs,
   errorNuller,
   addBlogVisibility
 }) => {
+  const notificationDispatch = useNotificationDispatch()
   const [newBlogTitle, setNewBlogTitle] = useState('')
   const [newBlogAuthor, setNewBlogAuthor] = useState('')
   const [newBlogUrl, setNewBlogUrl] = useState('')
@@ -21,7 +22,7 @@ const BlogForm = ({
         url: newBlogUrl
       })
       addBlogVisibility()
-      setErrorMessage([0, `a new blog ${newBlogTitle} by ${newBlogAuthor} added`])
+      notificationDispatch({ type: 'SET', payload: [0, `a new blog ${newBlogTitle} by ${newBlogAuthor} added`] })
       errorNuller()
       console.log(blogs)
       console.log(blog.data)
@@ -31,9 +32,9 @@ const BlogForm = ({
       setNewBlogUrl('')
     }
     catch (exception) {
-      setErrorMessage([1, 'create blog failed'])
+      notificationDispatch({ type: 'SET', payload: [1, 'create blog failed'] })
       setTimeout(() => {
-        setErrorMessage(null)
+        notificationDispatch({ type: 'NULL' })
       }, 5000)
     }
   }

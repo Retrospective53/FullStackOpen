@@ -5,13 +5,15 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import Toggable from './components/Toggable'
+import { useNotificationValue, useNotificationDispatch } from './hooks/notificationReducer'
 
 const App = () => {
+  const notificationValue = useNotificationValue()
+  const notificationDispatch = useNotificationDispatch()
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
   const [loginVisible, setLoginVisible] = useState(false)
 
   const blogFormRef = useRef()
@@ -32,7 +34,7 @@ const App = () => {
 
   const errorNuller = () => {
     setTimeout(() => {
-      setErrorMessage(null)
+      notificationDispatch({ type: 'NULL' })
     }, 5000)
   }
 
@@ -50,9 +52,9 @@ const App = () => {
       setPassword('')
     }
     catch (exception) {
-      setErrorMessage([1, 'Wrong Credentials'])
+      notificationDispatch({ type: 'SET',payload: [1, 'Wrong Credentials'] })
       setTimeout(() => {
-        setErrorMessage(null)
+        notificationDispatch({ type: 'NULL' })
       }, 5000)
     }
   }
@@ -103,20 +105,21 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={errorMessage}/>
+      <Notification message={notificationValue}/>
       {user === null && loginForm()}
       {user !== null && (
         <>
           <p>{`${user.username} is logged in`}</p>
           <button type='button' onClick={handleLogOut}>Log out</button>
           <Toggable buttonLabel='Create New Blog' ref={blogFormRef}>
-            <BlogForm setErrorMessage={setErrorMessage} errorNuller={errorNuller} blogs={blogs} setBlogs={setBlogs} addBlogVisibility={addBlogVisibility}/>
+            <BlogForm errorNuller={errorNuller} blogs={blogs} setBlogs={setBlogs} addBlogVisibility={addBlogVisibility}/>
           </Toggable>
           {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
             <Blog key={blog.id} blog={blog} increaseLike={increaseLike} handleDelete={handleDelete}/>
           )}
         </>
       )}
+      <button onClick={() => console.log(notificationValue)}>log</button>
     </div>
   )
 }
