@@ -19,7 +19,6 @@ blogRouter.get('/', async (request, response) => {
 blogRouter.post('/', userExtractor, async (request, response) => {
     const body = request.body
     const user = request.user
-    console.log(user)
     const blog = new Blog({
         title: body.title,
         author: body.author,
@@ -37,7 +36,6 @@ blogRouter.post('/', userExtractor, async (request, response) => {
         return
     }
     const savedBlog = await blog.save()
-    console.log(savedBlog)
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
 
@@ -49,12 +47,14 @@ blogRouter.post('/', userExtractor, async (request, response) => {
 blogRouter.delete('/:id', userExtractor, async (request, response) => {
     const user = request.user
     const blog = await Blog.findById(request.params.id)
-    console.log(request.params.id)
     if (blog.user.toString() !== user.id.toString()) {
         return response.status(401).json({ error: 'invalid id'})
     }
 
     await Blog.findByIdAndDelete(request.params.id)
+    console.log(blog.toString())
+    user.blogs = user.blogs.filter(b => b.toString() !== blog._id.toString())
+    await user.save()
     response.status(204).end()
 })
 
