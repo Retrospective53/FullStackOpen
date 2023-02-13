@@ -17,7 +17,6 @@ const App = () => {
   const [users, setUsers] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  // const [user, setUser] = useState(null)
   const [loginVisible, setLoginVisible] = useState(false)
   const blogFormRef = useRef()
 
@@ -29,15 +28,6 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-  // useEffect(() => {
-  //   const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
-  //   if (loggedUserJSON) {
-  //     const user = JSON.parse(loggedUserJSON)
-  //     setUser(user)
-  //     blogService.setToken(user.token)
-  //   }
-  // }, [])
-
 
   useEffect(() => {
     userService.getUsers()
@@ -46,7 +36,6 @@ const App = () => {
       })
       .catch(error => console.error(error))
   }, [])
-
 
   const queryBlogs = useQuery('blogs', blogService.getAll, { refetchOnWindowFocus: false })
   if (queryBlogs.isLoading) {
@@ -131,6 +120,8 @@ const App = () => {
           <p>{`${user.username} is logged in`}</p>
           <button type='button' onClick={handleLogOut}>Log out</button>
           <Users users={users}/>
+          <br />
+          <br />
           <Toggable buttonLabel='Create New Blog' ref={blogFormRef}>
             <BlogForm errorNuller={errorNuller} blogs={blogs} addBlogVisibility={addBlogVisibility}/>
           </Toggable>
