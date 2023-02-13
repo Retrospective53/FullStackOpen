@@ -4,14 +4,17 @@ import UserContext from './hooks/userContext'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import userService from './services/users'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import Toggable from './components/Toggable'
+import Users from './components/Users'
 import { useQuery } from 'react-query'
 
 const App = () => {
   const [notification, notificationDispatch] = useContext(NotificationContext)
   const [user, userDispatch] = useContext(UserContext)
+  const [users, setUsers] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   // const [user, setUser] = useState(null)
@@ -34,6 +37,16 @@ const App = () => {
   //     blogService.setToken(user.token)
   //   }
   // }, [])
+
+
+  useEffect(() => {
+    userService.getUsers()
+      .then(response => {
+        setUsers(response)
+      })
+      .catch(error => console.error(error))
+  }, [])
+
 
   const queryBlogs = useQuery('blogs', blogService.getAll, { refetchOnWindowFocus: false })
   if (queryBlogs.isLoading) {
@@ -117,6 +130,7 @@ const App = () => {
         <>
           <p>{`${user.username} is logged in`}</p>
           <button type='button' onClick={handleLogOut}>Log out</button>
+          <Users users={users}/>
           <Toggable buttonLabel='Create New Blog' ref={blogFormRef}>
             <BlogForm errorNuller={errorNuller} blogs={blogs} addBlogVisibility={addBlogVisibility}/>
           </Toggable>
