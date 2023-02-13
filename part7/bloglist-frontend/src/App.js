@@ -10,7 +10,6 @@ import { useQuery } from 'react-query'
 
 const App = () => {
   const [notification, notificationDispatch] = useContext(NotificationContext)
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -26,12 +25,17 @@ const App = () => {
     }
   }, [])
 
-  const result = useQuery('blogs', blogService.getAll, { refetchOnWindowFocus: false })
-  useEffect(() => {
-    if (result.data) {
-      setBlogs(result.data)
-    }
-  }, [result.data])
+  const queryBlogs = useQuery('blogs', blogService.getAll, { refetchOnWindowFocus: false })
+  if (queryBlogs.isLoading) {
+    return <div>loading data...</div>
+  }
+  const blogs = queryBlogs.data
+  // console.log(result)
+  // useEffect(() => {
+  //   if (result.data) {
+  //     setBlogs(result.data)
+  //   }
+  // }, [result.data])
 
   const errorNuller = () => {
     setTimeout(() => {
@@ -93,16 +97,6 @@ const App = () => {
   const addBlogVisibility = () => {
     blogFormRef.current.toggleVisibility()
   }
-
-  // const increaseLike = (blog) => {
-  //   const updatedBlog = blogs.map(b => b.id === blog.id ? { ...b, likes: b.likes + 1 } : b)
-  //   setBlogs(updatedBlog)
-
-  // }
-
-  // const handleDelete = (blog) => {
-  //   setBlogs(blogs.filter(b => b.id !== blog.id))
-  // }
 
   return (
     <div>

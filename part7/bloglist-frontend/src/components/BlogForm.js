@@ -16,6 +16,22 @@ const BlogForm = ({
     onSuccess: newObject => {
       const blogs = queryClient.getQueryData('blogs')
       queryClient.setQueryData('blogs', blogs.concat(newObject))
+      notificationDispatch({ type: 'SET', payload: [0, `a new blog ${newBlogTitle} by ${newBlogAuthor} added`] })
+      errorNuller()
+      addBlogVisibility()
+      // setBlogs(blogs.concat(blog.data))
+      setNewBlogTitle('')
+      setNewBlogAuthor('')
+      setNewBlogUrl('')
+    },
+    onError: (error) => {
+      if (error.response.data.error === 'token expired') {
+        notificationDispatch({ type: 'SET', payload: [1, `${error.response.data.error}, please login`] })
+        errorNuller()
+        return
+      }
+      notificationDispatch({ type: 'SET', payload: [1, 'error unable to create'] })
+      errorNuller()
     }
   })
 
@@ -27,13 +43,6 @@ const BlogForm = ({
         author: newBlogAuthor,
         url: newBlogUrl
       })
-      addBlogVisibility()
-      notificationDispatch({ type: 'SET', payload: [0, `a new blog ${newBlogTitle} by ${newBlogAuthor} added`] })
-      errorNuller()
-      // setBlogs(blogs.concat(blog.data))
-      setNewBlogTitle('')
-      setNewBlogAuthor('')
-      setNewBlogUrl('')
     }
     catch (exception) {
       notificationDispatch({ type: 'SET', payload: [1, 'create blog failed'] })
