@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useContext } from 'react'
 import NotificationContext from './hooks/notificationReducer'
+import UserContext from './hooks/userContext'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -10,9 +11,10 @@ import { useQuery } from 'react-query'
 
 const App = () => {
   const [notification, notificationDispatch] = useContext(NotificationContext)
+  const [user, userDispatch] = useContext(UserContext)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  // const [user, setUser] = useState(null)
   const [loginVisible, setLoginVisible] = useState(false)
   const blogFormRef = useRef()
 
@@ -20,10 +22,18 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      userDispatch({ type: 'SET', payload: user })
       blogService.setToken(user.token)
     }
   }, [])
+  // useEffect(() => {
+  //   const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
+  //   if (loggedUserJSON) {
+  //     const user = JSON.parse(loggedUserJSON)
+  //     setUser(user)
+  //     blogService.setToken(user.token)
+  //   }
+  // }, [])
 
   const queryBlogs = useQuery('blogs', blogService.getAll, { refetchOnWindowFocus: false })
   if (queryBlogs.isLoading) {
@@ -52,7 +62,7 @@ const App = () => {
       })
       window.localStorage.setItem('loggedBlogUser', JSON.stringify(user))
       blogService.setToken(user.token)
-      setUser(user)
+      userDispatch({ type: 'SET', payload: user })
       setUsername('')
       setPassword('')
     }
@@ -66,7 +76,7 @@ const App = () => {
 
   const handleLogOut = () => {
     window.localStorage.removeItem('loggedBlogUser')
-    setUser(null)
+    userDispatch({ type: 'NULL' })
   }
 
   const loginForm = () => {
