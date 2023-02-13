@@ -1,8 +1,26 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
+import { useQueryClient, useMutation } from 'react-query'
 
-const Blog = ({ blog, increaseLike, handleDelete }) => {
+const Blog = ({ blog }) => {
   const [blogVisible, setBlogVisible] = useState(false)
+  const queryClient = useQueryClient()
+  const updateBlogMutation = useMutation(blogService.updateLike, {
+    onSuccess: () => {
+      const blogs = queryClient.getQueryData('blogs')
+      queryClient.setQueryData('blogs', blogs.map(b => b.id === blog.id ? { ...b, likes: b.likes + 1 } : b))
+    }
+  })
+
+  const blogDeletion = useMutation(blogService.deleteBlog, {
+    onSuccess: id => {
+      const blogs = queryClient.getQueryData('blogs')
+      console.log(blogs.filter(b => b.id !== id))
+      console.log(id)
+      queryClient.setQueriesData('blogs', blogs.filter(b => b.id !== id))
+    }
+  })
+
 
   const blogStyle = {
     paddingTop: 10,
@@ -15,15 +33,17 @@ const Blog = ({ blog, increaseLike, handleDelete }) => {
   const hideWhenVisible = { display: blogVisible ? 'none' : '' }
   const showWhenVisible = { display: blogVisible ? '' : 'none' }
 
-  const handleUpdateLike = async () => {
-    await blogService.updateLike(blog.id, blog)
-    increaseLike(blog)
+  const handleUpdateLike = () => {
+    // await blogService.updateLike(blog.id, blog)
+    // increaseLike(blog)
+    updateBlogMutation.mutate({ ...blog, likes: blog.likes + 1 })
   }
 
   const handleBlogDelete = async () => {
     if (window.confirm(`Delete ${blog.title} by ${blog.author}?`) === true) {
-      await blogService.deleteBlog(blog.id)
-      handleDelete(blog)
+      // await blogService.deleteBlog(blog.id)
+      // handleDelete(blog)
+      blogDeletion.mutate(blog.id)
     } else {
       return
     }

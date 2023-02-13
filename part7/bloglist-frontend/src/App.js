@@ -94,15 +94,15 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
   }
 
-  const increaseLike = (blog) => {
-    const updatedBlog = blogs.map(b => b.id === blog.id ? { ...b, likes: b.likes + 1 } : b)
-    setBlogs(updatedBlog)
+  // const increaseLike = (blog) => {
+  //   const updatedBlog = blogs.map(b => b.id === blog.id ? { ...b, likes: b.likes + 1 } : b)
+  //   setBlogs(updatedBlog)
 
-  }
+  // }
 
-  const handleDelete = (blog) => {
-    setBlogs(blogs.filter(b => b.id !== blog.id))
-  }
+  // const handleDelete = (blog) => {
+  //   setBlogs(blogs.filter(b => b.id !== blog.id))
+  // }
 
   return (
     <div>
@@ -114,10 +114,10 @@ const App = () => {
           <p>{`${user.username} is logged in`}</p>
           <button type='button' onClick={handleLogOut}>Log out</button>
           <Toggable buttonLabel='Create New Blog' ref={blogFormRef}>
-            <BlogForm errorNuller={errorNuller} blogs={blogs} setBlogs={setBlogs} addBlogVisibility={addBlogVisibility}/>
+            <BlogForm errorNuller={errorNuller} blogs={blogs} addBlogVisibility={addBlogVisibility}/>
           </Toggable>
           {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-            <Blog key={blog.id} blog={blog} increaseLike={increaseLike} handleDelete={handleDelete}/>
+            <Blog key={blog.id} blog={blog} />
           )}
         </>
       )}

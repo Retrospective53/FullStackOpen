@@ -15,24 +15,25 @@ const create = async newObject => {
   const config = {
     headers: { Authorization: token }
   }
-
-  return await axios.post(baseUrl, newObject, config)
+  const response = await axios.post(baseUrl, newObject, config)
+  return response.data
 }
 
-const updateLike = async (id, newObject) => {
-  const increaseLike = {
-    ...newObject,
-    likes: newObject.likes + 1
-  }
-
-  return await axios.put(`${baseUrl}/${id}`, increaseLike)
+const updateLike = async newObject => {
+  // const increaseLike = {
+  //   ...newObject,
+  //   likes: newObject.likes + 1
+  // }
+  const response = await axios.put(`${baseUrl}/${newObject.id}`, newObject)
+  return response.data
 }
 
 const deleteBlog = async id => {
   const config = {
     headers: { Authorization: token }
   }
-  return await axios.delete(`${baseUrl}/${id}`, config)
+  await axios.delete(`${baseUrl}/${id}`, config)
+  return id
 }
 
 export default { getAll, create, updateLike, deleteBlog, setToken }
