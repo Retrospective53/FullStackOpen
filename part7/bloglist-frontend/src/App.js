@@ -10,6 +10,11 @@ import BlogForm from './components/BlogForm'
 import Toggable from './components/Toggable'
 import Users from './components/Users'
 import { useQuery } from 'react-query'
+import {
+  BrowserRouter as Router,
+  Routes, Route } from 'react-router-dom'
+import BlogDetails from './components/BlogDetails'
+import UserDetails from './components/userDetails'
 
 const App = () => {
   const [notification, notificationDispatch] = useContext(NotificationContext)
@@ -111,27 +116,32 @@ const App = () => {
   }
 
   return (
-    <div>
-      <h2>blogs</h2>
-      <Notification message={notification}/>
-      {user === null && loginForm()}
-      {user !== null && (
-        <>
-          <p>{`${user.username} is logged in`}</p>
-          <button type='button' onClick={handleLogOut}>Log out</button>
-          <Users users={users}/>
-          <br />
-          <br />
-          <Toggable buttonLabel='Create New Blog' ref={blogFormRef}>
-            <BlogForm errorNuller={errorNuller} blogs={blogs} addBlogVisibility={addBlogVisibility}/>
-          </Toggable>
-          {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-            <Blog key={blog.id} blog={blog} />
-          )}
-        </>
-      )}
-      <button onClick={() => console.log(notification)}>log</button>
-    </div>
+    <Router>
+      <div>
+        <h2>blogs</h2>
+        <Notification message={notification}/>
+        {user === null && loginForm()}
+        {user !== null && (
+          <>
+            <p>{`${user.username} is logged in`}</p>
+            <button type='button' onClick={handleLogOut}>Log out</button>
+            <Users users={users}/>
+            <br />
+            <br />
+            <Toggable buttonLabel='Create New Blog' ref={blogFormRef}>
+              <BlogForm errorNuller={errorNuller} blogs={blogs} addBlogVisibility={addBlogVisibility}/>
+            </Toggable>
+            {blogs && <Blog blogs={blogs} />}
+          </>
+        )}
+        <Routes>
+          <Route path='/blogs/:id' element={<BlogDetails blogs={blogs}/>}/>
+          <Route path='/users/:id' element={<UserDetails users={users}/>}></Route>
+          {/* <Route path='/' element={<Home />}></Route> */}
+        </Routes>
+        <button onClick={() => console.log(notification)}>log</button>
+      </div>
+    </Router>
   )
 }
 

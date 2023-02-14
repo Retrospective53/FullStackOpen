@@ -1,8 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes, Route, Link
-} from 'react-router-dom'
-import UserDetails from './userDetails'
+import { Link } from 'react-router-dom'
 
 const Users = ({ users }) => {
   return(
@@ -14,19 +10,12 @@ const Users = ({ users }) => {
             <th></th>
             <th>blogs created</th>
           </tr>
-          <Router>
-            {users && users.map(user =>
-              <tr key={user.id}>
-                <Link to={`/users/${user.id}`}>
-                  <td>{user.username}</td>
-                </Link>
-                <td>{user.blogs.length}</td>
-              </tr>
-            )}
-            <Routes>
-              <Route path='/users/:id' element={<UserDetails users={users}/>}></Route>
-            </Routes>
-          </Router>
+          {users && users.map(user =>
+            <tr key={user.id}>
+              <td><Link to={`/users/${user.id}`}>{user.username}</Link></td>
+              <td>{user.blogs.length}</td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

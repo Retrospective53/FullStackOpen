@@ -1,7 +1,11 @@
 import blogService from '../services/blogs'
 import { useQueryClient, useMutation } from 'react-query'
+import { useParams } from 'react-router-dom'
 
-const BlogDetails = ({ blog }) => {
+const BlogDetails = ({ blogs }) => {
+  const id = useParams().id
+  const blog = blogs.find(b => b.id === id)
+
   const queryClient = useQueryClient()
   const updateBlogMutation = useMutation(blogService.updateLike, {
     onSuccess: () => {

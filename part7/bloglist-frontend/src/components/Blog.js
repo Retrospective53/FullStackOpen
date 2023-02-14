@@ -1,11 +1,6 @@
-import {
-  BrowserRouter as Router,
-  Routes, Route, Link
-} from 'react-router-dom'
-import BlogDetails from './BlogDetails'
+import { Link } from 'react-router-dom'
 
-
-const Blog = ({ blog }) => {
+const Blog = ({ blogs }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -15,15 +10,13 @@ const Blog = ({ blog }) => {
   }
 
   return(
-    <Router>
-      <div style={blogStyle} className='blog'>
-        <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
-      </div>
-
-      <Routes>
-        <Route path='/blogs/:id' element={<BlogDetails blog={blog}/>}/>
-      </Routes>
-    </Router>
+    <div>
+      {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+        <div key={blog.id} style={blogStyle} className='blog'>
+          <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
+        </div>
+      )}
+    </div>
   )
 }
 
