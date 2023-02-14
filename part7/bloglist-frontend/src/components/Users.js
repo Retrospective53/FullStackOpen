@@ -4,10 +4,10 @@ const Users = ({ users }) => {
   return(
     <div>
       <h2>Users</h2>
-      <table>
+      <table className='table'>
         <tbody>
           <tr>
-            <th></th>
+            <th>user</th>
             <th>blogs created</th>
           </tr>
           {users && users.map(user =>

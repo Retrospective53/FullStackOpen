@@ -8,7 +8,6 @@ const Blog = ({ blogs }) => {
     borderWidth: 1,
     marginBottom: 5
   }
-
   return(
     <div>
       <h2>blogs</h2>

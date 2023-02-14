@@ -15,6 +15,7 @@ import {
   Routes, Route, Link } from 'react-router-dom'
 import BlogDetails from './components/BlogDetails'
 import UserDetails from './components/userDetails'
+import { Form, Button } from 'react-bootstrap'
 
 const App = () => {
   const [notification, notificationDispatch] = useContext(NotificationContext)
@@ -22,7 +23,7 @@ const App = () => {
   const [users, setUsers] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [loginVisible, setLoginVisible] = useState(false)
+  // const [loginVisible, setLoginVisible] = useState(false)
   const blogFormRef = useRef()
 
   useEffect(() => {
@@ -87,26 +88,28 @@ const App = () => {
   }
 
   const loginForm = () => {
-    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
-    const showWhenVisible = { display: loginVisible ? '' : 'none' }
+    // const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+    // const showWhenVisible = { display: loginVisible ? '' : 'none' }
 
     return (
       <div>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>Log in</button>
-        </div>
-        <div style={showWhenVisible}>
-          <form onSubmit={handleLogin}>
-            <h2>Log in to application</h2>
-            <div>
-              username
-              <input type="text" name='username' id='username' value={username} onChange={({ target }) => setUsername(target.value)}/></div>
-            <div>
-              password
-              <input type="text" name='password' id='password' value={password} onChange={({ target }) => setPassword(target.value)}/></div>
-            <button id='loginButton'>login</button>
-          </form>
-          <button onClick={() => setLoginVisible(false)}>cancel</button>
+        {/* <div style={hideWhenVisible}>
+          <Button variant='dark' onClick={() => setLoginVisible(true)}>Log in</Button>
+        </div> */}
+        <div className='d-flex align-items-center justify-content-center'>
+          <Form onSubmit={handleLogin}>
+            <Form.Group>
+              <h2>Log in to application</h2>
+              <div>
+                <Form.Label>username</Form.Label>
+                <Form.Control type="text" name='username' id='username' value={username} onChange={({ target }) => setUsername(target.value)}/></div>
+              <div>
+                <Form.Label>password</Form.Label>
+                <Form.Control type="password" name='password' id='password' value={password} onChange={({ target }) => setPassword(target.value)}/></div>
+              <Button type='submit' className='primary' id='loginButton'>login</Button>
+              {/* <Button type='button' className='btn btn-secondary' onClick={() => setLoginVisible(false)}>cancel</Button> */}
+            </Form.Group>
+          </Form>
         </div>
       </div>
     )}
@@ -174,13 +177,13 @@ const App = () => {
 
   return (
     <Router>
-      {user !== null && navigation() }
-      <div>
+      { user !== null && navigation() }
+      <div className='container'>
         <Notification message={notification}/>
         {user === null && loginForm()}
         <Routes>
           {blogs && <Route path='/blogs' element={<Blog blogs={blogs}/>}/>}
-          <Route path='/users' element={<Users users={users}/>}/>
+          {blogs && <Route path='/users' element={<Users users={users}/>}/>}
           <Route path='/blogs/:id' element={<BlogDetails blogs={blogs}/>}/>
           <Route path='/users/:id' element={<UserDetails users={users}/>}/>
           {user !== null && <Route path='/' element={home()}></Route>}
