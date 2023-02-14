@@ -12,7 +12,7 @@ import Users from './components/Users'
 import { useQuery } from 'react-query'
 import {
   BrowserRouter as Router,
-  Routes, Route } from 'react-router-dom'
+  Routes, Route, Link } from 'react-router-dom'
 import BlogDetails from './components/BlogDetails'
 import UserDetails from './components/userDetails'
 
@@ -115,31 +115,76 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
   }
 
+  const home = () => {
+
+    return(
+      <div>
+        <Toggable buttonLabel='Create New Blog' ref={blogFormRef}>
+          <BlogForm errorNuller={errorNuller} blogs={blogs} addBlogVisibility={addBlogVisibility}/>
+        </Toggable>
+      </div>
+    )
+  }
+
+  const navigation = () => {
+    const style = {
+      display: 'flex',
+      alignItems: 'center',
+      backgroundColor: '#f2f2f2',
+      padding: '10px 20px',
+      borderBottom: '1px solid #ccc',
+      listStyleType: 'none',
+      margin: '0',
+      fontSize: '1.2rem'
+    }
+
+    const linkStyle = {
+      textDecoration: 'none',
+      color: '#333',
+      marginRight: '20px',
+      cursor: 'pointer'
+    }
+
+    const buttonStyle = {
+      backgroundColor: '#333',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '5px',
+      padding: '10px',
+      cursor: 'pointer'
+    }
+    return(
+      <div>
+        <ul style={style}>
+          <li>
+            <Link style={linkStyle} to={'/'}>Home</Link>
+          </li>
+          <li>
+            <Link style={linkStyle} to={'/blogs'}>blogs</Link>
+          </li>
+          <li>
+            <Link style={linkStyle} to={'/users'}>users</Link>
+          </li>
+          <li>{`${user.username} is logged in`}</li>
+          <button style={buttonStyle} type='button' onClick={handleLogOut}>Log out</button>
+        </ul>
+      </div>
+    )
+  }
+
   return (
     <Router>
+      {user !== null && navigation() }
       <div>
-        <h2>blogs</h2>
         <Notification message={notification}/>
         {user === null && loginForm()}
-        {user !== null && (
-          <>
-            <p>{`${user.username} is logged in`}</p>
-            <button type='button' onClick={handleLogOut}>Log out</button>
-            <Users users={users}/>
-            <br />
-            <br />
-            <Toggable buttonLabel='Create New Blog' ref={blogFormRef}>
-              <BlogForm errorNuller={errorNuller} blogs={blogs} addBlogVisibility={addBlogVisibility}/>
-            </Toggable>
-            {blogs && <Blog blogs={blogs} />}
-          </>
-        )}
         <Routes>
+          {blogs && <Route path='/blogs' element={<Blog blogs={blogs}/>}/>}
+          <Route path='/users' element={<Users users={users}/>}/>
           <Route path='/blogs/:id' element={<BlogDetails blogs={blogs}/>}/>
-          <Route path='/users/:id' element={<UserDetails users={users}/>}></Route>
-          {/* <Route path='/' element={<Home />}></Route> */}
+          <Route path='/users/:id' element={<UserDetails users={users}/>}/>
+          {user !== null && <Route path='/' element={home()}></Route>}
         </Routes>
-        <button onClick={() => console.log(notification)}>log</button>
       </div>
     </Router>
   )
