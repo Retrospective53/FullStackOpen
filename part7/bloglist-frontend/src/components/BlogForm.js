@@ -5,7 +5,10 @@ import { useMutation, useQueryClient } from 'react-query'
 
 const BlogForm = ({
   errorNuller,
-  addBlogVisibility
+  addBlogVisibility,
+  setUsers,
+  users,
+  user
 }) => {
   const notificationDispatch = useNotificationDispatch()
   const [newBlogTitle, setNewBlogTitle] = useState('')
@@ -16,6 +19,8 @@ const BlogForm = ({
     onSuccess: newObject => {
       const blogs = queryClient.getQueryData('blogs')
       queryClient.setQueryData('blogs', blogs.concat(newObject))
+      setUsers(users.map(u => u.username === user.username ? { ...u, blogs: u.blogs.concat(newObject) } : u))
+      console.log(users)
       notificationDispatch({ type: 'SET', payload: [0, `a new blog ${newBlogTitle} by ${newBlogAuthor} added`] })
       errorNuller()
       addBlogVisibility()

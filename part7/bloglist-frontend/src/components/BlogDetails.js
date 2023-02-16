@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 
-const BlogDetails = ({ blogs }) => {
+const BlogDetails = ({ blogs, setUsers, users }) => {
   const [comment, setComment] = useState('')
   const id = useParams().id
   const blog = blogs.find(b => b.id === id)
@@ -43,6 +43,7 @@ const BlogDetails = ({ blogs }) => {
       // await blogService.deleteBlog(blog.id)
       // handleDelete(blog)
       blogDeletion.mutate(blog.id)
+      setUsers(users.map(u => u.blogs.some(b => b.id === id) ? { ...u, blogs: u.blogs.filter(blog => blog.id !== id) } : u))
     } else {
       return
     }
@@ -65,14 +66,14 @@ const BlogDetails = ({ blogs }) => {
 
   return(
     <div className='details'>
-      <div>
+      {blog && <div>
         <p>Title: {blog.title}</p>
         <p>Author: {blog.author}</p>
         <p>Likes: {blog.likes} <button onClick={handleUpdateLike} className='like'>Like</button></p>
         <p>Url: {blog.url}</p>
         <p>User: {blog.user.username}</p>
         {user.username === blog.user.username && <button onClick={handleBlogDelete}><Link to={'/blogs'}>delete blog</Link></button>}
-      </div>
+      </div>}
       <div>
         <h3>comments</h3>
         <form onSubmit={handleComment}>

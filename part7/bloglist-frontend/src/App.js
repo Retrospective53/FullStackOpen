@@ -119,13 +119,14 @@ const App = () => {
   const addBlogVisibility = () => {
     blogFormRef.current.toggleVisibility()
   }
-
+  // console.log(users)
+  // console.log(user)
   const home = () => {
 
     return(
       <div>
         <Toggable buttonLabel='Create New Blog' ref={blogFormRef}>
-          <BlogForm errorNuller={errorNuller} blogs={blogs} addBlogVisibility={addBlogVisibility}/>
+          <BlogForm errorNuller={errorNuller} blogs={blogs} addBlogVisibility={addBlogVisibility} users={users} setUsers={setUsers} user={user}/>
         </Toggable>
       </div>
     )
@@ -189,7 +190,7 @@ const App = () => {
         <Routes>
           {user !== null && (blogs && <Route path='/blogs' element={<Blog blogs={blogs}/>}/>)}
           {user !== null && (blogs && <Route path='/users' element={<Users users={users}/>}/>)}
-          {user !== null && <Route path='/blogs/:id' element={<BlogDetails blogs={blogs}/>}/>}
+          {user !== null && <Route path='/blogs/:id' element={<BlogDetails blogs={blogs} setUsers={setUsers} users={users}/>}/>}
           {user !== null && <Route path='/users/:id' element={<UserDetails users={users}/>}/>}
           {user !== null && <Route path='/' element={home()}></Route>}
         </Routes>
