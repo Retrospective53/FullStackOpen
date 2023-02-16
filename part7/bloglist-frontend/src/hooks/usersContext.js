@@ -11,10 +11,10 @@ const usersReducer = (state, action) => {
   }
 }
 
-const UserContext = createContext()
+const UsersContext = createContext()
 
 export const UserContextProvider = props => {
-  const [users, usersDispatch] = useReducer(userReducer, null)
+  const [users, usersDispatch] = useReducer(usersReducer, null)
 
   return(
     <UserContext.Provider value={[user, userDispatch]}>
@@ -23,14 +23,14 @@ export const UserContextProvider = props => {
   )
 }
 
-export const useUserValue = () => {
+export const useUsersValue = () => {
   const userAndDispatch = useContext(UserContext)
   return userAndDispatch[0]
 }
 
-export const useUserDispatch = () => {
+export const useUsersDispatch = () => {
   const userAndDispatch = useContext(UserContext)
   return userAndDispatch[1]
 }
 
-export default UserContext
+export default UsersContext

@@ -17,6 +17,8 @@ import BlogDetails from './components/BlogDetails'
 import UserDetails from './components/userDetails'
 import { Form, Button } from 'react-bootstrap'
 
+import './styles/app.css'
+
 const App = () => {
   const [notification, notificationDispatch] = useContext(NotificationContext)
   const [user, userDispatch] = useContext(UserContext)
@@ -132,6 +134,7 @@ const App = () => {
   const navigation = () => {
     const style = {
       display: 'flex',
+      flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: '#f2f2f2',
       padding: '10px 20px',
@@ -157,18 +160,20 @@ const App = () => {
       cursor: 'pointer'
     }
     return(
-      <div>
-        <ul style={style}>
-          <li>
-            <Link style={linkStyle} to={'/'}>Home</Link>
-          </li>
-          <li>
-            <Link style={linkStyle} to={'/blogs'}>blogs</Link>
-          </li>
-          <li>
-            <Link style={linkStyle} to={'/users'}>users</Link>
-          </li>
-          <li>{`${user.username} is logged in`}</li>
+      <div id='navigation'>
+        <ul style={style} className='d-flex justify-content-between'>
+          <div className='d-flex flex-row'>
+            <li>
+              <Link style={linkStyle} to={'/'}>Home</Link>
+            </li>
+            <li>
+              <Link style={linkStyle} to={'/blogs'}>Blogs</Link>
+            </li>
+            <li>
+              <Link style={linkStyle} to={'/users'}>Users</Link>
+            </li>
+            <li>{`${user.username} is logged in`}</li>
+          </div>
           <button style={buttonStyle} type='button' onClick={handleLogOut}>Log out</button>
         </ul>
       </div>
@@ -178,14 +183,14 @@ const App = () => {
   return (
     <Router>
       { user !== null && navigation() }
-      <div className='container'>
+      <div id='home' className='container'>
         <Notification message={notification}/>
         {user === null && loginForm()}
         <Routes>
-          {blogs && <Route path='/blogs' element={<Blog blogs={blogs}/>}/>}
-          {blogs && <Route path='/users' element={<Users users={users}/>}/>}
-          <Route path='/blogs/:id' element={<BlogDetails blogs={blogs}/>}/>
-          <Route path='/users/:id' element={<UserDetails users={users}/>}/>
+          {user !== null && (blogs && <Route path='/blogs' element={<Blog blogs={blogs}/>}/>)}
+          {user !== null && (blogs && <Route path='/users' element={<Users users={users}/>}/>)}
+          {user !== null && <Route path='/blogs/:id' element={<BlogDetails blogs={blogs}/>}/>}
+          {user !== null && <Route path='/users/:id' element={<UserDetails users={users}/>}/>}
           {user !== null && <Route path='/' element={home()}></Route>}
         </Routes>
       </div>
