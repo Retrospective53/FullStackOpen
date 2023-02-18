@@ -10,13 +10,11 @@ import BlogForm from './components/BlogForm'
 import Toggable from './components/Toggable'
 import Users from './components/Users'
 import { useQuery } from 'react-query'
-import {
-  BrowserRouter as Router,
-  Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 import BlogDetails from './components/BlogDetails'
 import UserDetails from './components/userDetails'
+import RegisterForm from './components/RegisterForm'
 import { Form, Button } from 'react-bootstrap'
-
 import './styles/app.css'
 
 const App = () => {
@@ -60,7 +58,7 @@ const App = () => {
   const errorNuller = () => {
     setTimeout(() => {
       notificationDispatch({ type: 'NULL' })
-    }, 5000)
+    }, 3000)
   }
 
   const handleLogin = async e => {
@@ -80,7 +78,7 @@ const App = () => {
       notificationDispatch({ type: 'SET',payload: [1, 'Wrong Credentials'] })
       setTimeout(() => {
         notificationDispatch({ type: 'NULL' })
-      }, 5000)
+      }, 3000)
     }
   }
 
@@ -94,14 +92,14 @@ const App = () => {
     // const showWhenVisible = { display: loginVisible ? '' : 'none' }
 
     return (
-      <div>
+      <div id='loginContainer'>
         {/* <div style={hideWhenVisible}>
           <Button variant='dark' onClick={() => setLoginVisible(true)}>Log in</Button>
         </div> */}
-        <div className='d-flex align-items-center justify-content-center'>
+        <div id='login' className='d-flex align-items-center justify-content-center'>
           <Form onSubmit={handleLogin}>
             <Form.Group>
-              <h2>Log in to application</h2>
+              <h2>Login</h2>
               <div>
                 <Form.Label>username</Form.Label>
                 <Form.Control type="text" name='username' id='username' value={username} onChange={({ target }) => setUsername(target.value)}/></div>
@@ -111,6 +109,7 @@ const App = () => {
               <Button type='submit' className='primary' id='loginButton'>login</Button>
               {/* <Button type='button' className='btn btn-secondary' onClick={() => setLoginVisible(false)}>cancel</Button> */}
             </Form.Group>
+            <Link to={'/register'}>Create an account</Link>
           </Form>
         </div>
       </div>
@@ -165,7 +164,7 @@ const App = () => {
         <ul style={style} className='d-flex justify-content-between'>
           <div className='d-flex flex-row'>
             <li>
-              <Link style={linkStyle} to={'/'}>Home</Link>
+              <Link style={linkStyle} to={'/home'}>Home</Link>
             </li>
             <li>
               <Link style={linkStyle} to={'/blogs'}>Blogs</Link>
@@ -175,27 +174,32 @@ const App = () => {
             </li>
             <li>{`${user.username} is logged in`}</li>
           </div>
-          <button style={buttonStyle} type='button' onClick={handleLogOut}>Log out</button>
+          <Link to={'/'}><button style={buttonStyle} type='button' onClick={handleLogOut}>Log out</button></Link>
         </ul>
       </div>
     )
   }
 
   return (
-    <Router>
-      { user !== null && navigation() }
-      <div id='home' className='container'>
+    <>
+      <div id='lol' className='d-flex flex-column justify-content-start align-items-stretch'>
+        { user !== null && navigation() }
         <Notification message={notification}/>
-        {user === null && loginForm()}
-        <Routes>
-          {user !== null && (blogs && <Route path='/blogs' element={<Blog blogs={blogs}/>}/>)}
-          {user !== null && (blogs && <Route path='/users' element={<Users users={users}/>}/>)}
-          {user !== null && <Route path='/blogs/:id' element={<BlogDetails blogs={blogs} setUsers={setUsers} users={users}/>}/>}
-          {user !== null && <Route path='/users/:id' element={<UserDetails users={users}/>}/>}
-          {user !== null && <Route path='/' element={home()}></Route>}
-        </Routes>
+        <div id='lolz'>
+          <div id='home' className='container d-flex flex-column align-items-stretch justify-content-center'>
+            <Routes>
+              {user !== null && (blogs && <Route path='/blogs' element={<Blog blogs={blogs}/>}/>)}
+              {user !== null && (blogs && <Route path='/users' element={<Users users={users}/>}/>)}
+              {user !== null && <Route path='/blogs/:id' element={<BlogDetails blogs={blogs} setUsers={setUsers} users={users}/>}/>}
+              {user !== null && <Route path='/users/:id' element={<UserDetails users={users}/>}/>}
+              {user !== null && <Route path='/home' element={home()}/>}
+              {user === null && <Route path='/' element={loginForm()}/>}
+              <Route path='/register' element={<RegisterForm setUsers={setUsers} users={users}/>}/>
+            </Routes>
+          </div>
+        </div>
       </div>
-    </Router>
+    </>
   )
 }
 

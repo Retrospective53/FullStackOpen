@@ -2,6 +2,7 @@ import { useState } from 'react'
 import blogService from '../services/blogs'
 import { useNotificationDispatch } from '../hooks/notificationReducer'
 import { useMutation, useQueryClient } from 'react-query'
+import { Form, Button } from 'react-bootstrap'
 
 const BlogForm = ({
   errorNuller,
@@ -58,15 +59,25 @@ const BlogForm = ({
   }
 
   return(
-    <form onSubmit={handleCreate}>
-        title:
-      <input type="text" name='newTitle' id='newTitle' value={newBlogTitle} onChange={({ target }) => setNewBlogTitle(target.value)}/> <br/>
-        author:
-      <input type="text" name='newAuthor' id='newAuthor' value={newBlogAuthor} onChange={({ target }) => setNewBlogAuthor(target.value)}/> <br/>
-        url:
-      <input type="text" name='newUrl' id='newUrl' value={newBlogUrl} onChange={({ target }) => setNewBlogUrl(target.value)}/> <br/>
-      <button>create</button>
-    </form>
+    <div className='d-flex flex-column align-items-stretch justify-content-center'>
+      <Form onSubmit={handleCreate}>
+        <Form.Group>
+          <div>
+            <Form.Label>Title:</Form.Label>
+            <Form.Control type="text" name='newTitle' id='newTitle' value={newBlogTitle} onChange={({ target }) => setNewBlogTitle(target.value)}/>
+          </div>
+          <div>
+            <Form.Label>author:</Form.Label>
+            <Form.Control type="text" name='newAuthor' id='newAuthor' value={newBlogAuthor} onChange={({ target }) => setNewBlogAuthor(target.value)}/> <br/>
+          </div>
+          <div>
+            <Form.Label>url:</Form.Label>
+            <Form.Control type="text" name='newUrl' id='newUrl' value={newBlogUrl} onChange={({ target }) => setNewBlogUrl(target.value)}/> <br/>
+          </div>
+          <Button type='submit'>create</Button>
+        </Form.Group>
+      </Form>
+    </div>
   )
 }
 

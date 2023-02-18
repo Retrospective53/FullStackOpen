@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom'
+import { Table } from 'react-bootstrap'
 
 const Users = ({ users }) => {
   return(
     <div>
       <h2>Users</h2>
-      <table className='table'>
+      <Table striped className='table'>
         <tbody>
           <tr>
             <th>user</th>
@@ -17,7 +18,7 @@ const Users = ({ users }) => {
             </tr>
           )}
         </tbody>
-      </table>
+      </Table>
     </div>
   )
 }
