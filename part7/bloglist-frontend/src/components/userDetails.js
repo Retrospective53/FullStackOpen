@@ -10,11 +10,12 @@ const UserDetails = ({ users }) => {
 
   return (
     <div>
-      <h2>{user.username}</h2>
+      <h2>{user.username}</h2> <br />
+      <h5>Blog list</h5>
       {user.blogs.length === 0 && <div>The user has not yet created a blog.</div>}
       <ul className='list-group'>
         {user.blogs.map(blog =>
-          <li key={ blog.id }>
+          <li className='list-group-item' key={ blog.id }>
             <Link to={`/blogs/${blog.id}`}>{ blog.title }</Link>
           </li>) }
       </ul>

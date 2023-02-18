@@ -13,21 +13,17 @@ const Blog = ({ blogs }) => {
     color: '#333'
   }
 
-  const blogHover = {
-    boxShadow: '2px 2px 10px rgba(0, 0, 0, 0.2)',
-  }
-
   return (
     <div>
       <h2 style={{ textAlign: 'center' }}>Blog Posts</h2>
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', flexDirection: 'column' }}>
         {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-          <Link to={`/blogs/${blog.id}`} key={blog.id} style={blogStyle} className='blog' onMouseOver={(e) => e.currentTarget.style = { ...blogStyle, ...blogHover }} onMouseOut={(e) => e.currentTarget.style = blogStyle}>
+          <Link to={`/blogs/${blog.id}`} key={blog.id} style={blogStyle} className='blog'>
             <h3 style={{ marginBottom: 5 }}>{blog.title}</h3>
             <p style={{ color: '#666', marginBottom: 5 }}>By {blog.author}</p>
             <p style={{ color: '#999', fontSize: 14, marginTop: 5 }}>{blog.likes} likes</p>
           </Link>
-        ) }
+        )}
       </div>
     </div>
   )

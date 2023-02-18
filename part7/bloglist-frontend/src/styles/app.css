@@ -36,14 +36,8 @@
   background-color: whitesmoke;
 }
 
-/* #home {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: center;
+#home {
+  min-height: 80vh;
 }
 
-#navigation {
-  width: 100%;
-} */
 

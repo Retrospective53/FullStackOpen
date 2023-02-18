@@ -121,9 +121,23 @@ const App = () => {
   // console.log(users)
   // console.log(user)
   const home = () => {
+    const homeStyle = {
+      margin: '0 auto',
+      padding: '20px',
+      backgroundColor: '#fff',
+      border: '1px solid #ddd',
+      borderRadius: 5,
+      boxShadow: '2px 2px 6px rgba(0, 0, 0, 0.1)',
+      color: '#333',
+      fontSize: 16,
+      lineHeight: 1.5
+    }
 
-    return(
-      <div>
+    return (
+      <div style={homeStyle}>
+        <p style={{ marginBottom: 20 }}>
+          This web application is a simple blog list that allows users to view a list of blog posts sorted by the number of likes. Each blog post is displayed as a clickable link, which leads to a detailed view of the post. The application is built using React and React Router to create dynamic and responsive user interfaces.
+        </p>
         <Toggable buttonLabel='Create New Blog' ref={blogFormRef}>
           <BlogForm errorNuller={errorNuller} blogs={blogs} addBlogVisibility={addBlogVisibility} users={users} setUsers={setUsers} user={user}/>
         </Toggable>
@@ -164,7 +178,7 @@ const App = () => {
         <ul style={style} className='d-flex justify-content-between'>
           <div className='d-flex flex-row'>
             <li>
-              <Link style={linkStyle} to={'/home'}>Home</Link>
+              <Link style={linkStyle} to={'/'}>Home</Link>
             </li>
             <li>
               <Link style={linkStyle} to={'/blogs'}>Blogs</Link>
@@ -192,7 +206,7 @@ const App = () => {
               {user !== null && (blogs && <Route path='/users' element={<Users users={users}/>}/>)}
               {user !== null && <Route path='/blogs/:id' element={<BlogDetails blogs={blogs} setUsers={setUsers} users={users}/>}/>}
               {user !== null && <Route path='/users/:id' element={<UserDetails users={users}/>}/>}
-              {user !== null && <Route path='/home' element={home()}/>}
+              {user !== null && <Route path='/' element={home()}/>}
               {user === null && <Route path='/' element={loginForm()}/>}
               <Route path='/register' element={<RegisterForm setUsers={setUsers} users={users}/>}/>
             </Routes>
