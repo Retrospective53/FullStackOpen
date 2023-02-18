@@ -111,7 +111,7 @@ const BlogDetails = ({ blogs, setUsers, users }) => {
           <Col>
             <h2>{blog.title}</h2>
             <p>Author: {blog.author}</p>
-            <p>Likes: {blog.likes} <Button variant="primary" onClick={handleUpdateLike} className="like">Like</Button></p>
+            <p>Likes: {blog.likes} <Button variant="btn btn-outline-primary" onClick={handleUpdateLike} className="like">Like</Button></p>
             <p>Url: {blog.url}</p>
             <p>User: {blog.user.username}</p>
             {user.username === blog.user.username && <Button variant="danger" onClick={handleBlogDelete}><Link style={{ textDecoration: 'none', color: 'white' }} to='/blogs'>delete blog</Link></Button>}

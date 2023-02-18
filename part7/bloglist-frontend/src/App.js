@@ -136,7 +136,7 @@ const App = () => {
     return (
       <div style={homeStyle}>
         <p style={{ marginBottom: 20 }}>
-          This web application is a simple blog list that allows users to view a list of blog posts sorted by the number of likes. Each blog post is displayed as a clickable link, which leads to a detailed view of the post. The application is built using React and React Router to create dynamic and responsive user interfaces.
+        This web application is a straightforward blog list that enables users to view a list of blog posts sorted by the number of likes. Each blog post appears as a clickable link that takes users to a detailed view of the post. The application is built using React and React Router, and the developer used Bootstrap and React to experiment with different technologies and further their understanding of web development.
         </p>
         <Toggable buttonLabel='Create New Blog' ref={blogFormRef}>
           <BlogForm errorNuller={errorNuller} blogs={blogs} addBlogVisibility={addBlogVisibility} users={users} setUsers={setUsers} user={user}/>
