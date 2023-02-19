@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom'
 const UserDetails = ({ users }) => {
   const id = useParams().id
   const user = users.find(u => u.id === id)
-  if (!user) {
-    return null
-  }
 
+  if (!users || !user) {
+    return <div>loading</div>
+  }
   return (
     <div>
       <h2>{user.username}</h2> <br />

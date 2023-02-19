@@ -14,6 +14,10 @@ const BlogDetails = ({ blogs, setUsers, users }) => {
   const blog = blogs.find(b => b.id === id)
   const navigate = useNavigate()
 
+  if (!blogs || !blog || !users || !user) {
+    return <div>loading</div>
+  }
+
   const queryClient = useQueryClient()
   const updateBlogMutation = useMutation(blogService.updateLike, {
     onSuccess: () => {

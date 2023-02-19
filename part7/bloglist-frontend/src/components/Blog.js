@@ -13,6 +13,10 @@ const Blog = ({ blogs }) => {
     color: '#333'
   }
 
+  if (!blogs) {
+    return <div>loading</div>
+  }
+
   return (
     <div>
       <h2 style={{ textAlign: 'center' }}>Blog Posts</h2>

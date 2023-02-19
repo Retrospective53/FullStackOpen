@@ -2,6 +2,11 @@ import { Link } from 'react-router-dom'
 import { Table } from 'react-bootstrap'
 
 const Users = ({ users }) => {
+  if (!users) {
+    return <div>loading</div>
+  }
+
+
   return(
     <div className="p-4">
       <h2 className="mb-4">Users</h2>
