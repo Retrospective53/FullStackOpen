@@ -1,7 +1,6 @@
 import blogService from '../services/blogs'
 import { useQueryClient, useMutation } from 'react-query'
-import { useParams } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useUserValue } from '../hooks/userContext'
 import { Container, Row, Col, Form, Button, ListGroup } from 'react-bootstrap'
@@ -11,6 +10,7 @@ const BlogDetails = ({ blogs, setUsers, users }) => {
   const [comment, setComment] = useState('')
   const id = useParams().id
   const blog = blogs.find(b => b.id === id)
+  const navigate = useNavigate()
 
   const queryClient = useQueryClient()
   const updateBlogMutation = useMutation(blogService.updateLike, {
@@ -26,6 +26,7 @@ const BlogDetails = ({ blogs, setUsers, users }) => {
       console.log(blogs.filter(b => b.id !== id))
       console.log(id)
       queryClient.setQueriesData('blogs', blogs.filter(b => b.id !== id))
+      navigate('/blogs')
     }
   })
 
@@ -112,9 +113,9 @@ const BlogDetails = ({ blogs, setUsers, users }) => {
             <h2>{blog.title}</h2>
             <p>Author: {blog.author}</p>
             <p>Likes: {blog.likes} <Button variant="btn btn-outline-primary" onClick={handleUpdateLike} className="like">Like</Button></p>
-            <p>Url: {blog.url}</p>
+            <p>Url: <a href={blog.url}>{blog.url}</a></p>
             <p>User: {blog.user.username}</p>
-            {user.username === blog.user.username && <Button variant="danger" onClick={handleBlogDelete}><Link style={{ textDecoration: 'none', color: 'white' }} to='/blogs'>delete blog</Link></Button>}
+            {user.username === blog.user.username && <Button variant="danger" onClick={handleBlogDelete}>delete blog</Button>}
           </Col>
         </Row>
       )}
