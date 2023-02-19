@@ -4,8 +4,10 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useUserValue } from '../hooks/userContext'
 import { Container, Row, Col, Form, Button, ListGroup } from 'react-bootstrap'
+import { useNotificationDispatch } from '../hooks/notificationReducer'
 
 const BlogDetails = ({ blogs, setUsers, users }) => {
+  const notificationDispatch = useNotificationDispatch()
   const user = useUserValue()
   const [comment, setComment] = useState('')
   const id = useParams().id
@@ -23,16 +25,22 @@ const BlogDetails = ({ blogs, setUsers, users }) => {
   const blogDeletion = useMutation(blogService.deleteBlog, {
     onSuccess: id => {
       const blogs = queryClient.getQueryData('blogs')
-      console.log(blogs.filter(b => b.id !== id))
-      console.log(id)
       queryClient.setQueriesData('blogs', blogs.filter(b => b.id !== id))
       navigate('/blogs')
+      notificationDispatch({ type: 'SET', payload: [0, `${blog.title} by ${blog.author} deleted`] })
+      setTimeout(() => {
+        notificationDispatch({ type: 'NULL' })
+      }, 3000)
     }
   })
 
   const commentBlogMutation = useMutation(blogService.createComment, {
     onSuccess: () => {
       queryClient.invalidateQueries('blogs')
+      notificationDispatch({ type: 'SET', payload: [0, 'Comment created'] })
+      setTimeout(() => {
+        notificationDispatch({ type: 'NULL' })
+      }, 3000)
     }
   })
 
@@ -66,7 +74,6 @@ const BlogDetails = ({ blogs, setUsers, users }) => {
     await commentBlogMutation.mutate(newObject)
     setComment('')
   }
-  console.log(blog)
   // const loggedJSON = window.localStorage.getItem('loggedBlogUser')
   // const user = JSON.parse(loggedJSON)
 

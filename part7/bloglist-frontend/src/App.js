@@ -45,7 +45,7 @@ const App = () => {
 
   const queryBlogs = useQuery('blogs', blogService.getAll, { refetchOnWindowFocus: false })
   if (queryBlogs.isLoading) {
-    return <div>loading data...</div>
+    return <div style={{ color: 'white' }}>loading data...</div>
   }
   const blogs = queryBlogs.data
   // console.log(result)

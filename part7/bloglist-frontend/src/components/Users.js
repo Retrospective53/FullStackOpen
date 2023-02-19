@@ -3,17 +3,19 @@ import { Table } from 'react-bootstrap'
 
 const Users = ({ users }) => {
   return(
-    <div>
-      <h2>Users</h2>
-      <Table striped className='table'>
-        <tbody>
+    <div className="p-4">
+      <h2 className="mb-4">Users</h2>
+      <Table striped bordered hover responsive>
+        <thead>
           <tr>
-            <th>user</th>
-            <th>blogs created</th>
+            <th>User</th>
+            <th>Blogs created</th>
           </tr>
+        </thead>
+        <tbody>
           {users && users.map(user =>
             <tr key={user.id}>
-              <td><Link to={`/users/${user.id}`}>{user.username}</Link></td>
+              <td><Link to={`/users/${user.id}`} className="text-decoration-none">{user.username}</Link></td>
               <td>{user.blogs.length}</td>
             </tr>
           )}
