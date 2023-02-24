@@ -45,15 +45,9 @@ const App = () => {
 
   const queryBlogs = useQuery('blogs', blogService.getAll, { refetchOnWindowFocus: false })
   if (queryBlogs.isLoading) {
-    return <div style={{ color: 'white' }}>loading data...</div>
+    return
   }
   const blogs = queryBlogs.data
-  // console.log(result)
-  // useEffect(() => {
-  //   if (result.data) {
-  //     setBlogs(result.data)
-  //   }
-  // }, [result.data])
 
   const errorNuller = () => {
     setTimeout(() => {
